@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">PopularMovies</string>
+    <string name="api_key">eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyMDcwMTIyMWFlOGNhNjA5YWVkMmQ3NmY0MzUxNmEzZSIsInN1YiI6IjU3YzI1NmY0OTI1MTQxMGM5NTAwMWJjNSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.yGa5f02IC9iBirICvr4jGUtmLN30UcG5gb6QxNsrSsU</string>
+</resources>
