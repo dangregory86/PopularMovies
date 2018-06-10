@@ -5,63 +5,69 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by Daniel Gregory on 09/06/2018.
  */
-public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
+public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.MovieViewHolder> {
 
-    private String[] mData = new String[0];
-    private LayoutInflater mInflater;
+    private String[] mData;
     private ListItemClickListener mClickListener;
 
     public interface ListItemClickListener{
-        void onListItemClick(String item);
+        void onClick(int item);
     }
 
-    //constructor where the data is passed in
-    public MyRecyclerViewAdapter(Context context, String[] data, ListItemClickListener listener){
-        mInflater = LayoutInflater.from(context);
-        mData = data;
-        mClickListener = listener;
+    public MyRecyclerViewAdapter(ListItemClickListener listItemClickListener){
+        mClickListener = listItemClickListener;
     }
 
-//    inflates the layout when required.
-    @Override
-    public MyRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        int layoutID = R.layout.poster_grid_item;
-        View view = mInflater.inflate(layoutID, parent, false);
-        return new ViewHolder(view);
-    }
+    public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-    @Override
-    public void onBindViewHolder(MyRecyclerViewAdapter.ViewHolder holder, int position) {
-        String data = mData[position];
-        holder.myTextView.setText(data);
-    }
+        public ImageView posterImageView;
 
-    @Override
-    public int getItemCount() {
-        return mData.length;
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-
-        TextView myTextView;
-
-        public ViewHolder(View itemView) {
+        public MovieViewHolder(View itemView) {
             super(itemView);
-            myTextView = (TextView) itemView.findViewById(R.id.grid_item_text_view);
+            posterImageView = (ImageView) itemView.findViewById(R.id.grid_item_image_view);
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            if(mClickListener != null){
-                mClickListener.onListItemClick(mData[getAdapterPosition()]);
-            }
-
+            mClickListener.onClick(getAdapterPosition());
         }
+    }
+
+//    inflates the layout when required.
+    @Override
+    public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
+        int layoutID = R.layout.poster_grid_item;
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate(layoutID, parent, false);
+        return new MovieViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(MovieViewHolder holder, int position) {
+        String data = mData[position];
+        Picasso.with(holder.posterImageView.getContext()).load("http://image.tmdb.org/t/p/w342" + data).into(holder.posterImageView);
+    }
+
+    @Override
+    public int getItemCount() {
+        if(mData != null){
+            return mData.length;
+        }else{
+            return 0;
+        }
+    }
+
+    public void setMovieData(String[] s){
+        mData = s;
+        notifyDataSetChanged();
     }
 }

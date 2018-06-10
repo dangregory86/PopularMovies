@@ -1,6 +1,7 @@
 package gregory.dan.popularmovies;
 
 import android.net.Uri;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,35 +10,37 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * Created by Daniel Gregory on 09/06/2018.
  */
 public class MyMovieFetcher {
-
-    private final static String movieBaseURL = "https://api.themoviedb.org/3/movie";
+    private final static String movieBaseURL = "http://api.themoviedb.org/3/movie";
     private final static String apiKeyCode = "";
 
     private final static String popular = "popular";
     private final static String topRated = "top_rated";
     private final static String apiKey = "?api_key=" + apiKeyCode;
 
+
     /*url builder to build the api url
     * @param int to decide weather to show popular or top rated movies*/
     public static URL buildUrl(int selection){
 
-        String listType;
+        String searched;
         if(selection == 0){
-            listType = popular;
+            searched = popular;
         }else{
-            listType = topRated;
+            searched = topRated;
         }
+        searched += apiKey;
 
 //        Building the uri
         Uri builtUri = Uri.parse(movieBaseURL).buildUpon()
-                .appendPath(listType)
-                .appendEncodedPath(apiKey)
+                .appendEncodedPath(searched)
                 .build();
-
+        Log.d(TAG, "buildUrl: address = " + builtUri.toString());
         URL url = null;
         try{
             url = new URL(builtUri.toString());
@@ -57,10 +60,13 @@ public class MyMovieFetcher {
      */
     public static String getResponseFromHttpUrl(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        urlConnection.setRequestMethod("GET");
+        urlConnection.connect();
+        InputStream inputStream;
         try {
-            InputStream in = urlConnection.getInputStream();
+            inputStream = urlConnection.getInputStream();
 
-            Scanner scanner = new Scanner(in);
+            Scanner scanner = new Scanner(inputStream);
             scanner.useDelimiter("\\A");
 
             boolean hasInput = scanner.hasNext();

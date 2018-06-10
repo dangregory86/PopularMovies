@@ -6,83 +6,115 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity implements MyRecyclerViewAdapter.ListItemClickListener{
 
-//    TODO fill movie poster data
-//    TODO async task to collect movie data
-
     RecyclerView recyclerView;
     MyRecyclerViewAdapter adapter;
-    TextView testText;
+    Movie[] movies;
+
+    int selection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*a test to check if the recycler view is working*/
-        String[] data = {"1", "2", "3", "4", "5", "6", "7", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", };
-        recyclerView = (RecyclerView) findViewById(R.id.poster_grid);
+        recyclerView = findViewById(R.id.poster_grid);
         int numCols = 2;
         recyclerView.setLayoutManager(new GridLayoutManager(this, numCols));
-        adapter = new MyRecyclerViewAdapter(this, data, this);
-//        recyclerView.setAdapter(adapter);
+        adapter = new MyRecyclerViewAdapter(this);
+        recyclerView.setAdapter(adapter);
 
-        //test text view to be deleted
-        testText = (TextView) findViewById(R.id.test_text_view);
+        selection = 0;
 
-        new MyNetworkTasker().execute("test");
+        loadMovieData(selection);
 
     }
 
-    public void goToActivity() {
+    public void loadMovieData(int selected){
+        new MyNetworkTasker().execute(selected);
+    }
+
+    public void setNewData(String[] s){
+        if(s != null) adapter.setMovieData(s);
+    }
+
+    public void goToActivity(Movie m) {
         Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+        intent.putExtra(Intent.EXTRA_TEXT, m);
         startActivity(intent);
     }
 
     @Override
-    public void onListItemClick(String item) {
-        String toastMessage = "Item #" + item + " clicked.";
-        Toast mToast = Toast.makeText(this, toastMessage, Toast.LENGTH_LONG);
-
-        mToast.show();
+    public void onClick(int item) {
+        goToActivity(movies[item]);
     }
 
-    public void mSetText(String result){
-        testText.setText(result);
-    }
-
-    public class MyNetworkTasker extends AsyncTask<String, Void, String> {
+    public class MyNetworkTasker extends AsyncTask<Integer, Void, Movie[]> {
 
         @Override
-        protected String doInBackground(String... params) {
+        protected Movie[] doInBackground(Integer... params) {
             if(params.length == 0){
                 return null;
             }
 
-            int listType = 0;
-            URL searchURL = MyMovieFetcher.buildUrl(listType);
+            URL searchURL = MyMovieFetcher.buildUrl(params[0]);
             String results = null;
             try{
                 results = MyMovieFetcher.getResponseFromHttpUrl(searchURL);
+                Movie[] movies = MyJSONParser.getMovieInfoFromJson(MainActivity.this, results);
+                return movies;
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-            return results;
+            return null;
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            Log.d("test", "onPostExecute: finished");
-//            mSetText(s);
-
+        protected void onPostExecute(Movie[] s) {
+            movies = s;
+            String[] posterPath = new String[s.length];
+            for(int i =0; i < s.length; i++){
+                posterPath[i] = s[i].getPoster_path();
+            }
+            setNewData(posterPath);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+
+        inflater.inflate(R.menu.selection, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch(id){
+            case R.id.popular_menu:
+                selection = 0;
+                loadMovieData(selection);
+                break;
+            case R.id.top_rated_menu:
+                selection = 1;
+                loadMovieData(selection);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
