@@ -1,61 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".DetailActivity">
 
-    <TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingBottom="12dp"
-    android:textSize="24sp"
-    android:textAlignment="center"
-    android:id="@+id/detail_title_text_view"/>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-        <ImageView
-            android:contentDescription="@string/poster_detail"
+    <include
+        android:id="@+id/include"
+        layout="@layout/detail_title_section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/detail_image_view"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/detail_description"
-            android:textSize="18sp"
-            android:textAlignment="center"
-            android:padding="24dp"/>
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/detail_activity_horizontal_padding">
+
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginEnd="@dimen/detail_activity_horizontal_padding"
+            android:layout_marginStart="@dimen/detail_activity_horizontal_padding"
+
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/include2"
+                layout="@layout/detail_top_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/include" />
+
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:id="@+id/detail_release_date"
-                android:textAlignment="center"
-                android:padding="24dp"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:id="@+id/detail_rating"
-                android:textAlignment="center"
-                android:padding="24dp"/>
-        </LinearLayout>
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/trailer_list_view_title_text_view"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@+id/include2"
+                app:layout_constraintStart_toStartOf="@+id/include2"
+                app:layout_constraintTop_toBottomOf="@+id/include2" />
+
+            <ListView
+                android:id="@+id/trailer_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/textView"
+                app:layout_constraintStart_toStartOf="@+id/textView"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>

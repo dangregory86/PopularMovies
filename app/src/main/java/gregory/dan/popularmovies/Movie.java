@@ -13,6 +13,15 @@ public class Movie implements Parcelable{
     private double vote_average;
     private String overview;
     private String release_date;
+    private boolean mFavourited;
+
+    public boolean isFavourited() {
+        return mFavourited;
+    }
+
+    public void setFavourited(boolean favourited) {
+        this.mFavourited = favourited;
+    }
 
     public Movie(String title_, String posterPath, double rating, String overview_, String releaseDate){
         title = title_;

@@ -10,6 +10,7 @@
         android:layout_height="match_parent"
         android:id="@+id/poster_grid"
         android:clipToPadding="false"
-        android:padding="0dp"/>
+        android:padding="0dp"
+        android:stretchMode="columnWidth" />
 
 </FrameLayout>

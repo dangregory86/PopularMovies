@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="favourite_button_horizontal_padding">8dp</dimen>
+    <dimen name="detail_title_text_view_vertical_padding">24dp</dimen>
+    <dimen name="detail_activity_horizontal_padding">8dp</dimen>
+</resources>

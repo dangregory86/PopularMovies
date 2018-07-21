@@ -38,30 +38,13 @@ public class MyJSONParser {
         final String RELEASE_DATE = "release_date";
         final String POSTER_PATH = "poster_path";
 
-        Movie[] movieDeatils = null;
+        Movie[] movieDetails = null;
 
         JSONObject movieJSONs = new JSONObject(movieJSON);
 
-        /* Is there an error? */
-//        if (!forecastJson.has(RESULTS_ARRAY)) {
-//        } else {
-//            int errorCode = forecastJson.getInt(OWM_MESSAGE_CODE);
-//
-//            switch (errorCode) {
-//                case HttpURLConnection.HTTP_OK:
-//                    break;
-//                case HttpURLConnection.HTTP_NOT_FOUND:
-//                    /* Location invalid */
-//                    return null;
-//                default:
-//                    /* Server probably down */
-//                    return null;
-//            }
-//        }
-
         JSONArray resultsArray = movieJSONs.getJSONArray(RESULTS_ARRAY);
 
-        movieDeatils = new Movie[resultsArray.length()];
+        movieDetails = new Movie[resultsArray.length()];
 
         for (int i = 0; i < resultsArray.length(); i++) {
             String title;
@@ -79,9 +62,11 @@ public class MyJSONParser {
             release_date = movie.getString(RELEASE_DATE);
             poster_path = movie.getString(POSTER_PATH);
 
-            movieDeatils[i] = new Movie(title, poster_path, vote_average, overview, release_date);
+            movieDetails[i] = new Movie(title, poster_path, vote_average, overview, release_date);
         }
 
-        return movieDeatils;
+        return movieDetails;
     }
+
+
 }

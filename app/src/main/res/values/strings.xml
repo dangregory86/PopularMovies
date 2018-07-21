@@ -3,4 +3,10 @@
     <string name="popular">Popular Movies</string>
     <string name="top_rated">Top Rated Movies</string>
     <string name="poster_detail">Image of movie poster</string>
+    <string name="detail_poster_image_description">Movie poster</string>
+    <string name="rating_text">Rating</string>
+    <string name="add_favourite_button_text_default">Mark as favourite</string>
+    <string name="trailer_list_view_title_text_view">Trailers:</string>
+    <string name="remove_favourite">Remove from favourites</string>
+    <string name="favourite_string">Favourite</string>
 </resources>

@@ -1,8 +1,12 @@
 package gregory.dan.popularmovies;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,22 +18,40 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
+
+import gregory.dan.popularmovies.sqlData.MovieFavourites;
+import gregory.dan.popularmovies.sqlData.MovieViewModel;
 
 public class MainActivity extends AppCompatActivity implements MyRecyclerViewAdapter.ListItemClickListener{
 
     RecyclerView recyclerView;
     MyRecyclerViewAdapter adapter;
     Movie[] movies;
+    MovieViewModel mMoviewViewModel;
 
     int selection;
+    int numCols;
+
+    //TODO retrieve trailers
+    //TODO get trailers to play
+    //TODO get trailers to fill list view
+    //TODO update the colour scheme
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //instantiate the view model
+        mMoviewViewModel = ViewModelProviders.of(this).get(MovieViewModel.class);
 
         recyclerView = findViewById(R.id.poster_grid);
-        int numCols = 2;
+
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            numCols = 2;
+        } else {
+            numCols = 3;
+        }
         recyclerView.setLayoutManager(new GridLayoutManager(this, numCols));
         adapter = new MyRecyclerViewAdapter(this);
         recyclerView.setAdapter(adapter);
@@ -44,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         new MyNetworkTasker().execute(selected);
     }
 
-    public void setNewData(String[] s){
+    public void setNewData(Movie[] s) {
         if(s != null) adapter.setMovieData(s);
     }
 
@@ -73,9 +95,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                 results = MyMovieFetcher.getResponseFromHttpUrl(searchURL);
                 Movie[] movies = MyJSONParser.getMovieInfoFromJson(MainActivity.this, results);
                 return movies;
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
             return null;
@@ -84,11 +104,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         @Override
         protected void onPostExecute(Movie[] s) {
             movies = s;
-            String[] posterPath = new String[s.length];
-            for(int i =0; i < s.length; i++){
-                posterPath[i] = s[i].getPoster_path();
-            }
-            setNewData(posterPath);
+            checkForFavourite(s);
         }
     }
 
@@ -116,5 +132,22 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void checkForFavourite(final Movie[] movie) {
+        //watch the movie favoiurites database to see if any are added/removed
+        mMoviewViewModel.getAllMovies().observe(this, new Observer<List<MovieFavourites>>() {
+            @Override
+            public void onChanged(@Nullable List<MovieFavourites> movieFavourites) {
+                for (int j = 0; j < movie.length; j++) {
+                    //a boolean to see if the database has teh film as a favourite
+                    for (int i = 0; i < movieFavourites.size(); i++) {
+                        movie[j].setFavourited(movieFavourites.get(i).mMovieTitle.equalsIgnoreCase(movie[j].getTitle()));
+                    }
+                }
+                setNewData(movies);
+            }
+        });
+
     }
 }

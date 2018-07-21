@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/detail_year_of_release_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textSize="24sp"
+        android:typeface="monospace"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="2015" />
+
+    <TextView
+        android:id="@+id/detail_movie_length_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="italic"
+        app:layout_constraintStart_toStartOf="@+id/detail_year_of_release_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/detail_year_of_release_text_view"
+        tools:text="120min" />
+
+    <RatingBar
+        android:id="@+id/detail_film_rating_bar"
+        style="@android:style/Widget.RatingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:isIndicator="true"
+        android:minHeight="24dp"
+        android:numStars="@integer/rating_bar_num_stars"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/detail_movie_length_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/detail_rating_title_text_view"
+        tools:rating="4" />
+
+    <TextView
+        android:id="@+id/detail_rating_title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/rating_text"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/detail_year_of_release_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/detail_movie_length_text_view" />
+
+    <TextView
+        android:id="@+id/detail_rating_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/detail_rating_title_text_view"
+        app:layout_constraintStart_toEndOf="@+id/detail_rating_title_text_view"
+        app:layout_constraintTop_toTopOf="@+id/detail_rating_title_text_view"
+        tools:text="4/5" />
+
+    <Button
+        android:id="@+id/favourite_button"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorPrimary"
+        android:paddingEnd="@dimen/favourite_button_horizontal_padding"
+        android:paddingLeft="@dimen/favourite_button_horizontal_padding"
+        android:paddingRight="@dimen/favourite_button_horizontal_padding"
+        android:paddingStart="@dimen/favourite_button_horizontal_padding"
+        android:text="@string/add_favourite_button_text_default"
+        app:layout_constraintStart_toStartOf="@+id/detail_film_rating_bar"
+        app:layout_constraintTop_toBottomOf="@+id/detail_film_rating_bar" />
+
+
+    <Button
+        android:id="@+id/delete_button"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorAccent"
+        android:paddingEnd="@dimen/favourite_button_horizontal_padding"
+        android:paddingLeft="@dimen/favourite_button_horizontal_padding"
+        android:paddingRight="@dimen/favourite_button_horizontal_padding"
+        android:paddingStart="@dimen/favourite_button_horizontal_padding"
+        android:text="@string/remove_favourite"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/detail_film_rating_bar"
+        app:layout_constraintTop_toBottomOf="@+id/detail_film_rating_bar" />
+
+    <ImageView
+        android:id="@+id/detail_favourite_star"
+        android:layout_width="66dp"
+        android:layout_height="61dp"
+        android:layout_marginStart="16dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toEndOf="@+id/detail_rating_text_view"
+        app:layout_constraintTop_toTopOf="@+id/detail_year_of_release_text_view"
+        app:srcCompat="@android:drawable/btn_star_big_on" />
+
+</android.support.constraint.ConstraintLayout>

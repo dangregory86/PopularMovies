@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -14,24 +15,27 @@ import com.squareup.picasso.Picasso;
  */
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.MovieViewHolder> {
 
-    private String[] mData;
+    private Movie[] mData;
     private ListItemClickListener mClickListener;
+    private final String posterPathStart = "http://image.tmdb.org/t/p/w780";
 
     public interface ListItemClickListener{
         void onClick(int item);
     }
 
-    public MyRecyclerViewAdapter(ListItemClickListener listItemClickListener){
+    MyRecyclerViewAdapter(ListItemClickListener listItemClickListener) {
         mClickListener = listItemClickListener;
     }
 
     public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        public ImageView posterImageView;
+        ImageView posterImageView;
+        TextView favouriteTextView;
 
-        public MovieViewHolder(View itemView) {
+        MovieViewHolder(View itemView) {
             super(itemView);
-            posterImageView = (ImageView) itemView.findViewById(R.id.grid_item_image_view);
+            posterImageView = itemView.findViewById(R.id.grid_item_image_view);
+            favouriteTextView = itemView.findViewById(R.id.favourite_text_view_main_activity);
             itemView.setOnClickListener(this);
         }
 
@@ -51,10 +55,16 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         return new MovieViewHolder(view);
     }
 
+    //TODO make the favourite icon show on all favourited films not just one at a time!!
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
-        String data = mData[position];
-        Picasso.with(holder.posterImageView.getContext()).load("http://image.tmdb.org/t/p/w342" + data).into(holder.posterImageView);
+        String data = mData[position].getPoster_path();
+        holder.favouriteTextView.setVisibility(View.INVISIBLE);
+        if (mData[position].isFavourited()) {
+            holder.favouriteTextView.setVisibility(View.VISIBLE);
+        }
+        Picasso.with(holder.posterImageView.getContext()).load(posterPathStart + data).into(holder.posterImageView);
+
     }
 
     @Override
@@ -66,7 +76,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         }
     }
 
-    public void setMovieData(String[] s){
+    public void setMovieData(Movie[] s) {
         mData = s;
         notifyDataSetChanged();
     }
