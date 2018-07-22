@@ -3,17 +3,25 @@ package gregory.dan.popularmovies;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 import gregory.dan.popularmovies.sqlData.MovieFavourites;
@@ -33,6 +41,9 @@ public class DetailActivity extends AppCompatActivity {
     TextView detailReleaseDate;
     TextView detailRating;
     RatingBar ratingBar;
+    ListView trailerListView;
+    int searchInt, movieId;
+    mySimpleFilmTrailerAdapter mMySimpleFilmAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +51,7 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         instantiateViews();
-
+        searchInt = 4;
         final Movie movie;
         Intent intent = getIntent();
 
@@ -51,7 +62,7 @@ public class DetailActivity extends AppCompatActivity {
         String releaseDate = "Released\n" + movie.getRelease_date();
 
         titleTextView.setText(movie.getTitle());
-        Picasso.with(this).load("http://image.tmdb.org/t/p/w185" + movie.getPoster_path()).into(detailImageView);
+        Picasso.get().load("http://image.tmdb.org/t/p/w185" + movie.getPoster_path()).into(detailImageView);
         detailOverview.setText(movie.getOverview());
         detailReleaseDate.setText(releaseDate);
         detailRating.setText(rating);
@@ -73,14 +84,14 @@ public class DetailActivity extends AppCompatActivity {
                 deleteFromFavourites(thisMovie);
             }
         });
+        movieId = Integer.parseInt(movie.getMfilmId());
 
-
+        new MyDetailNetworkTasker(searchInt, movieId).execute(searchInt);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         //watch the movie favoiurites database to see if any are added/removed
         mMoviewViewModel.getAllMovies().observe(this, new Observer<List<MovieFavourites>>() {
             @Override
@@ -139,5 +150,57 @@ public class DetailActivity extends AppCompatActivity {
         addToFavouritesButton = findViewById(R.id.favourite_button);
         favouriteStarImage = findViewById(R.id.detail_favourite_star);
         removeFromFavouritesButton = findViewById(R.id.delete_button);
+        trailerListView = findViewById(R.id.trailer_list_view);
     }
+
+    public void attachAdapter(MovieTrailer[] movies) {
+        mMySimpleFilmAdapter = new mySimpleFilmTrailerAdapter(this, movies);
+        trailerListView.setAdapter(mMySimpleFilmAdapter);
+        trailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                MovieTrailer movie = (MovieTrailer) view.getTag();
+                Toast.makeText(getApplicationContext(), movie.getTrailerCode(), Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(DetailActivity.this, PopUpVideoPlayer.class);
+                intent.putExtra("code", movie.getTrailerCode());
+                startActivity(intent);
+            }
+        });
+    }
+
+    public class MyDetailNetworkTasker extends AsyncTask<Integer, Void, MovieTrailer[]> {
+
+        int mSelection;
+        int mMovieId;
+
+        private MyDetailNetworkTasker(int selection, @Nullable int movieId) {
+            mSelection = selection;
+            mMovieId = movieId;
+        }
+
+        @Override
+        protected MovieTrailer[] doInBackground(Integer... params) {
+            if (params.length == 0) {
+                return null;
+            }
+
+            URL searchURL = MyMovieFetcher.buildUrl(mSelection, mMovieId);
+            String results = null;
+            try {
+                results = MyMovieFetcher.getResponseFromHttpUrl(searchURL);
+                return MyJSONParser.getTrailerDetailsFromJson(DetailActivity.this, results);
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(MovieTrailer[] s) {
+            attachAdapter(s);
+        }
+    }
+
+
 }
+

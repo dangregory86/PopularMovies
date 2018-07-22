@@ -14,6 +14,7 @@ public class Movie implements Parcelable{
     private String overview;
     private String release_date;
     private boolean mFavourited;
+    private String mfilmId;
 
     public boolean isFavourited() {
         return mFavourited;
@@ -23,20 +24,39 @@ public class Movie implements Parcelable{
         this.mFavourited = favourited;
     }
 
-    public Movie(String title_, String posterPath, double rating, String overview_, String releaseDate){
+    private Movie(String title_, String posterPath, double rating, String overview_, String releaseDate, String filmId) {
         title = title_;
         poster_path = posterPath;
         vote_average = rating;
         overview = overview_;
         release_date = releaseDate;
+        mfilmId = filmId;
     }
 
-    protected Movie(Parcel in) {
+    public boolean ismFavourited() {
+        return mFavourited;
+    }
+
+    public void setmFavourited(boolean mFavourited) {
+        this.mFavourited = mFavourited;
+    }
+
+    public String getMfilmId() {
+        return mfilmId;
+    }
+
+    public void setMfilmId(String mfilmId) {
+        this.mfilmId = mfilmId;
+    }
+
+    private Movie(Parcel in) {
         title = in.readString();
         poster_path = in.readString();
         vote_average = in.readDouble();
         overview = in.readString();
         release_date = in.readString();
+        mfilmId = in.readString();
+
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -103,5 +123,6 @@ public class Movie implements Parcelable{
         parcel.writeDouble(vote_average);
         parcel.writeString(overview);
         parcel.writeString(release_date);
+        parcel.writeString(mfilmId);
     }
 }

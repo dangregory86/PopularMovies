@@ -55,16 +55,14 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         return new MovieViewHolder(view);
     }
 
-    //TODO make the favourite icon show on all favourited films not just one at a time!!
     @Override
     public void onBindViewHolder(MovieViewHolder holder, int position) {
         String data = mData[position].getPoster_path();
-        holder.favouriteTextView.setVisibility(View.INVISIBLE);
+        holder.favouriteTextView.setVisibility(View.GONE);
         if (mData[position].isFavourited()) {
             holder.favouriteTextView.setVisibility(View.VISIBLE);
         }
-        Picasso.with(holder.posterImageView.getContext()).load(posterPathStart + data).into(holder.posterImageView);
-
+        Picasso.get().load(posterPathStart + data).noFade().resizeDimen(R.dimen.poster_width, R.dimen.poster_height).centerInside().into(holder.posterImageView);
     }
 
     @Override

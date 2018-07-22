@@ -33,9 +33,9 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     int selection;
     int numCols;
 
-    //TODO retrieve trailers
-    //TODO get trailers to play
-    //TODO get trailers to fill list view
+
+    //TODO get and display user reviews
+    //TODO set a favourites selection option and only show favourites
     //TODO update the colour scheme
 
     @Override
@@ -58,12 +58,12 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
 
         selection = 0;
 
-        loadMovieData(selection);
+        loadMovieData(selection, -1);
 
     }
 
-    public void loadMovieData(int selected){
-        new MyNetworkTasker().execute(selected);
+    public void loadMovieData(int selected, int movieID) {
+        new MyNetworkTasker(selected, movieID).execute(selected);
     }
 
     public void setNewData(Movie[] s) {
@@ -83,18 +83,26 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
 
     public class MyNetworkTasker extends AsyncTask<Integer, Void, Movie[]> {
 
+        int mSelection;
+        int mMovieId;
+
+        private MyNetworkTasker(int selection, @Nullable int movieId) {
+            mSelection = selection;
+            mMovieId = movieId;
+        }
+
         @Override
         protected Movie[] doInBackground(Integer... params) {
             if(params.length == 0){
                 return null;
             }
 
-            URL searchURL = MyMovieFetcher.buildUrl(params[0]);
-            String results = null;
+            URL searchURL = MyMovieFetcher.buildUrl(mSelection, mMovieId);
+            String results;
             try{
                 results = MyMovieFetcher.getResponseFromHttpUrl(searchURL);
-                Movie[] movies = MyJSONParser.getMovieInfoFromJson(MainActivity.this, results);
-                return movies;
+
+                return MyJSONParser.getMovieInfoFromJson(MainActivity.this, results);
             } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
@@ -124,25 +132,26 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         switch(id){
             case R.id.popular_menu:
                 selection = 0;
-                loadMovieData(selection);
+                loadMovieData(selection, -1);
                 break;
             case R.id.top_rated_menu:
                 selection = 1;
-                loadMovieData(selection);
+                loadMovieData(selection, -1);
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
     public void checkForFavourite(final Movie[] movie) {
-        //watch the movie favoiurites database to see if any are added/removed
+        //watch the movie favourites database to see if any are added/removed
         mMoviewViewModel.getAllMovies().observe(this, new Observer<List<MovieFavourites>>() {
             @Override
             public void onChanged(@Nullable List<MovieFavourites> movieFavourites) {
                 for (int j = 0; j < movie.length; j++) {
                     //a boolean to see if the database has teh film as a favourite
                     for (int i = 0; i < movieFavourites.size(); i++) {
-                        movie[j].setFavourited(movieFavourites.get(i).mMovieTitle.equalsIgnoreCase(movie[j].getTitle()));
+                        if (movieFavourites.get(i).mMovieTitle.equalsIgnoreCase(movie[j].getTitle()))
+                            movie[j].setFavourited(true);
                     }
                 }
                 setNewData(movies);

@@ -10,6 +10,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
+import javax.annotation.Nullable;
+
 import static android.content.ContentValues.TAG;
 
 /**
@@ -21,25 +23,44 @@ public class MyMovieFetcher {
 
     private final static String popular = "popular";
     private final static String topRated = "top_rated";
-    private final static String apiKey = "?api_key=" + apiKeyCode;
+    private final static String apiKey = "?api_key=";
+    private static final String VIDEOS = "videos";
 
 
     /*url builder to build the api url
     * @param int to decide weather to show popular or top rated movies*/
-    public static URL buildUrl(int selection){
+    public static URL buildUrl(int selection, @Nullable int movieId) {
 
         String searched;
-        if(selection == 0){
-            searched = popular;
-        }else{
-            searched = topRated;
-        }
-        searched += apiKey;
+        Uri builtUri = null;
 
-//        Building the uri
-        Uri builtUri = Uri.parse(movieBaseURL).buildUpon()
-                .appendEncodedPath(searched)
-                .build();
+        switch (selection) {
+            case 0:
+            case 1:
+                if (selection == 0) {
+                    searched = popular;
+                } else {
+                    searched = topRated;
+                }
+                searched += apiKey + apiKeyCode;
+                //        Building the uri
+                builtUri = Uri.parse(movieBaseURL).buildUpon()
+                        .appendEncodedPath(searched)
+                        .build();
+                break;
+            case 4:
+                searched = VIDEOS;
+                searched += apiKey + apiKeyCode;
+                builtUri = Uri.parse(movieBaseURL).buildUpon()
+                        .appendPath(Integer.toString(movieId))
+                        .appendEncodedPath(searched)
+                        .build();
+                break;
+            default:
+                Log.d(TAG, " wrong uri entered");
+
+
+        }
         Log.d(TAG, "buildUrl: address = " + builtUri.toString());
         URL url = null;
         try{

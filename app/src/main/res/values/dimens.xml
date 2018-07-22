@@ -3,4 +3,6 @@
     <dimen name="favourite_button_horizontal_padding">8dp</dimen>
     <dimen name="detail_title_text_view_vertical_padding">24dp</dimen>
     <dimen name="detail_activity_horizontal_padding">8dp</dimen>
+    <dimen name="poster_height">450dp</dimen>
+    <dimen name="poster_width">150dp</dimen>
 </resources>

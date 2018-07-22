@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".DetailActivity">
 
-
+    <!--TODO set the default view at the top of the screen-->
     <include
         android:id="@+id/include"
         layout="@layout/detail_title_section"
@@ -51,14 +51,11 @@
                 app:layout_constraintStart_toStartOf="@+id/include2"
                 app:layout_constraintTop_toBottomOf="@+id/include2" />
 
-            <ListView
-                android:id="@+id/trailer_list_view"
+            <include
+                layout="@layout/trailer_list_view_section"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toEndOf="@+id/textView"
-                app:layout_constraintStart_toStartOf="@+id/textView"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
+                android:layout_height="250dp" />
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
