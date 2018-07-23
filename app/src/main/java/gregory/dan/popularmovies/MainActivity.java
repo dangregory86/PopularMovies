@@ -33,8 +33,6 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     int selection;
     int numCols;
 
-
-    //TODO get and display user reviews
     //TODO set a favourites selection option and only show favourites
     //TODO update the colour scheme
 
