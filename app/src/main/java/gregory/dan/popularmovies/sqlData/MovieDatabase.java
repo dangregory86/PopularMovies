@@ -8,7 +8,7 @@ import android.content.Context;
 /**
  * Created by Daniel Gregory on 21/07/2018.
  */
-@Database(entities = MovieFavourites.class, version = 2, exportSchema = false)
+@Database(entities = MovieFavourites.class, version = 3, exportSchema = false)
 public abstract class MovieDatabase extends RoomDatabase {
     public abstract MovieDAO movieDAO();
 

@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="@string/popular"
+    <item
         android:id="@+id/popular_menu"
-        android:orderInCategory="1"/>
-    <item android:title="@string/top_rated"
+        android:orderInCategory="1"
+        android:title="@string/popular" />
+    <item
         android:id="@+id/top_rated_menu"
-        android:orderInCategory="2"/>
+        android:orderInCategory="2"
+        android:title="@string/top_rated" />
+    <item
+        android:id="@+id/favourited_menu"
+        android:orderInCategory="3"
+        android:title="@string/favourited" />
 </menu>

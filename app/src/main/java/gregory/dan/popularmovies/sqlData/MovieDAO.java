@@ -27,5 +27,4 @@ public abstract class MovieDAO {
     @Query("SELECT * from movies ORDER BY movie_title ASC")
     abstract LiveData<List<MovieFavourites>> getAllMovies();
 
-
 }

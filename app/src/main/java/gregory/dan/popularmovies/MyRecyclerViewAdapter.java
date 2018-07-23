@@ -62,6 +62,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         if (mData[position].isFavourited()) {
             holder.favouriteTextView.setVisibility(View.VISIBLE);
         }
+        holder.favouriteTextView.setTag(mData[position]);
         Picasso.get().load(posterPathStart + data).noFade().resizeDimen(R.dimen.poster_width, R.dimen.poster_height).centerInside().into(holder.posterImageView);
     }
 

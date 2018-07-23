@@ -9,4 +9,6 @@
     <string name="trailer_list_view_title_text_view">Trailers:</string>
     <string name="remove_favourite">Remove from favourites</string>
     <string name="favourite_string">Favourite</string>
+    <string name="reviews_list_view_title_text_view">Reviews:</string>
+    <string name="favourited">Favourites</string>
 </resources>

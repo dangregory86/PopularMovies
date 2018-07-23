@@ -98,4 +98,32 @@ public class MyJSONParser {
         return trailerIds;
     }
 
+    public static MovieReview[] getMovieReviewsFromJSon(Context context, String results)
+            throws JSONException {
+
+        MovieReview[] reviews;
+
+        final String REVIEW_AUTHOR = "author";
+        final String REVIEW_TEXT = "content";
+
+        JSONObject movieReviewsJSON = new JSONObject(results);
+
+        JSONArray movieReviewsArray = movieReviewsJSON.getJSONArray(RESULTS_ARRAY);
+        reviews = new MovieReview[movieReviewsArray.length()];
+
+        //loop through the reviews
+        for (int i = 0; i < movieReviewsArray.length(); i++){
+            String reviewAuthor;
+            String reviewText;
+
+            JSONObject review = movieReviewsArray.getJSONObject(i);
+
+            reviewAuthor = review.getString(REVIEW_AUTHOR);
+            reviewText = review.getString(REVIEW_TEXT);
+
+            reviews[i] = new MovieReview(reviewAuthor, reviewText);
+        }
+
+        return reviews;
+    }
 }

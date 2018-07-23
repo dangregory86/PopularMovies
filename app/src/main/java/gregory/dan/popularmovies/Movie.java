@@ -24,7 +24,7 @@ public class Movie implements Parcelable{
         this.mFavourited = favourited;
     }
 
-    private Movie(String title_, String posterPath, double rating, String overview_, String releaseDate, String filmId) {
+    protected Movie(String title_, String posterPath, double rating, String overview_, String releaseDate, String filmId) {
         title = title_;
         poster_path = posterPath;
         vote_average = rating;

@@ -25,6 +25,7 @@ public class MyMovieFetcher {
     private final static String topRated = "top_rated";
     private final static String apiKey = "?api_key=";
     private static final String VIDEOS = "videos";
+    private static final String REVIEWS = "reviews";
 
 
     /*url builder to build the api url
@@ -56,6 +57,13 @@ public class MyMovieFetcher {
                         .appendEncodedPath(searched)
                         .build();
                 break;
+            case 6:
+                searched = REVIEWS;
+                searched += apiKey + apiKeyCode;
+                builtUri = Uri.parse(movieBaseURL).buildUpon()
+                        .appendPath(Integer.toString(movieId))
+                        .appendEncodedPath(searched)
+                        .build();
             default:
                 Log.d(TAG, " wrong uri entered");
 

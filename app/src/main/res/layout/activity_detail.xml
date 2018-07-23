@@ -7,7 +7,6 @@
     android:orientation="vertical"
     tools:context=".DetailActivity">
 
-    <!--TODO set the default view at the top of the screen-->
     <include
         android:id="@+id/include"
         layout="@layout/detail_title_section"
@@ -40,21 +39,45 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/include" />
 
-            <TextView
-                android:id="@+id/textView"
+            <Button
+                android:id="@+id/trailers_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:layout_marginBottom="0dp"
                 android:text="@string/trailer_list_view_title_text_view"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="@+id/include2"
                 app:layout_constraintStart_toStartOf="@+id/include2"
-                app:layout_constraintTop_toBottomOf="@+id/include2" />
+                app:layout_constraintTop_toBottomOf="@+id/include2"/>
 
-            <include
-                layout="@layout/trailer_list_view_section"
+            <ListView
+                android:id="@+id/trailer_list_view"
                 android:layout_width="match_parent"
-                android:layout_height="250dp" />
+                android:layout_height="250dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:nestedScrollingEnabled="true"/>
+
+            <Button
+                android:id="@+id/reviews_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/reviews_list_view_title_text_view"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@+id/include2"
+                app:layout_constraintStart_toStartOf="@+id/include2"
+                app:layout_constraintTop_toBottomOf="@+id/include2"/>
+
+            <ListView
+                android:id="@+id/detail_review_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="true"
+                android:visibility="gone"/>
 
         </LinearLayout>
     </ScrollView>

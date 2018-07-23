@@ -33,9 +33,6 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     int selection;
     int numCols;
 
-    //TODO set a favourites selection option and only show favourites
-    //TODO update the colour scheme
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,9 +51,8 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         adapter = new MyRecyclerViewAdapter(this);
         recyclerView.setAdapter(adapter);
 
-        selection = 0;
-
-        loadMovieData(selection, -1);
+        if(movies == null){
+        loadMovieData(selection, -1);}
 
     }
 
@@ -110,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         @Override
         protected void onPostExecute(Movie[] s) {
             movies = s;
-            checkForFavourite(s);
+            checkForFavourite(s, 1);
         }
     }
 
@@ -136,23 +132,54 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                 selection = 1;
                 loadMovieData(selection, -1);
                 break;
+            case R.id.favourited_menu:
+                selection = 2;
+                checkForFavourite(movies, 2);
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public void checkForFavourite(final Movie[] movie) {
+
+    /*
+    * @Params Movie[] the movie array to check through.
+    * @Params int favourites: checking if it should show only the favourites.
+    * */
+    public void checkForFavourite(final Movie[] movie, final int favourites) {
         //watch the movie favourites database to see if any are added/removed
         mMoviewViewModel.getAllMovies().observe(this, new Observer<List<MovieFavourites>>() {
             @Override
             public void onChanged(@Nullable List<MovieFavourites> movieFavourites) {
-                for (int j = 0; j < movie.length; j++) {
-                    //a boolean to see if the database has teh film as a favourite
-                    for (int i = 0; i < movieFavourites.size(); i++) {
-                        if (movieFavourites.get(i).mMovieTitle.equalsIgnoreCase(movie[j].getTitle()))
-                            movie[j].setFavourited(true);
-                    }
+                Movie[] favouriteArray;
+                switch(favourites){
+                    case 1:
+                        for (int j = 0; j < movie.length; j++) {
+                            //a boolean to see if the database has teh film as a favourite
+                            for (int i = 0; i < movieFavourites.size(); i++) {
+                                if (movieFavourites.get(i).mMovieTitle.equalsIgnoreCase(movie[j].getTitle()))
+                                    movie[j].setFavourited(true);
+                            }
+                        }
+                        setNewData(movies);
+                        break;
+                    case 2:
+                        favouriteArray = new Movie[movieFavourites.size()];
+                        for(int i = 0; i < movieFavourites.size(); i++){
+                            String title = movieFavourites.get(i).mMovieTitle;
+                            String poster_path = movieFavourites.get(i).poster_path;
+                            double vote_average = movieFavourites.get(i).vote_average;
+                            String overview = movieFavourites.get(i).overview;
+                            String release_date = movieFavourites.get(i).release_date;
+                            String mfilmId = movieFavourites.get(i).mMovieId;
+
+                            Movie movie = new Movie(title,  poster_path, vote_average,  overview,  release_date,  mfilmId);
+                            movie.setFavourited(true);
+
+                            favouriteArray[i] = movie;
+                        }
+                        movies = favouriteArray;
+                        setNewData(favouriteArray);
+                        break;
                 }
-                setNewData(movies);
             }
         });
 
